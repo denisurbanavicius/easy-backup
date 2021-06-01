@@ -1,0 +1,15 @@
+[system]
+# More cores makes a big difference for folders with lots of small files. Big files won't benefit.
+max_cpu_cores = 4
+# Runs every backup (origin and target pair) in parallel. Makes a mess on the console.
+parallel_jobs = False
+# true -> deletes files that exists only on target. false -> only copy from origin to target.
+full_sync = True
+
+[example]
+origin = C:\Folder 1
+target = C:\Folder 2
+
+[games]
+origin = C:\Users\your_name_here\Saved Games
+target = D:\Backup\Saved Games
