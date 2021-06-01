@@ -5,31 +5,20 @@ import threading
 from copy_files import copy_files
 from delete_files import delete_files, delete_empty_folders
 from results import compile_results
-from utils import load_config, listed_to_skip
+from utils import load_config
 
 from multiprocessing import Pool
 
-
-skip_folders = ['C:\\Windows',
-                'C:\\Windows.old',
-                'C:\\Program Files (x86)\\iRacing']
-skip_files = ['C:\\DumpStack.log.tmp',
-              'C:\\hiberfil.sys',
-              'C:\\pagefile.sys',
-              'C:\\swapfile.sys']
-
-
 # TODO: Fix bug that rewrites skipped and error log files on each use
 # TODO: Add log folder on config
-# TODO: Remove skip folders and files
+
 
 def sync(origin, target, job, cpu_cores):
     walk_buffer = []
 
     print(f'Loading file list for {origin} -> {target}')
     for root, dirs, files in os.walk(origin):
-        if not listed_to_skip(skip_folders, root):
-            walk_buffer.append((root, files, skip_files, origin, target))
+        walk_buffer.append((root, files, origin, target))
     print('File list loaded.')
 
     print('Copying files...')

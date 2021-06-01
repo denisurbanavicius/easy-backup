@@ -1,11 +1,10 @@
 import os
 import filecmp
 
-from utils import listed_to_skip
 from shutil import copy2
 
 
-def copy_files(root, files, skip_files, origin, target):
+def copy_files(root, files, origin, target):
     files_scanned = 0
     files_unchanged = 0
     files_updated = 0
@@ -16,8 +15,6 @@ def copy_files(root, files, skip_files, origin, target):
     current_path = root.replace(origin, '').lstrip(os.sep)
     for file in files:
         file_path = os.path.join(root, file)
-        if listed_to_skip(skip_files, file_path):
-            continue
         target_folder = os.path.join(target, current_path)
         target_path = os.path.join(target_folder, file)
         files_scanned += 1
