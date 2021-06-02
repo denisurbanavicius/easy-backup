@@ -8,6 +8,7 @@ from results import compile_results
 from utils import load_config
 
 from multiprocessing import Pool
+from tqdm import tqdm
 
 # TODO: Fix bug that rewrites skipped and error log files on each use
 # TODO: Add log folder on config
@@ -16,14 +17,14 @@ from multiprocessing import Pool
 def sync(origin, target, job, cpu_cores):
     walk_buffer = []
 
-    print(f'Loading file list for {origin} -> {target}')
+    print(f'\nLoading file list for {origin} -> {target}')
     for root, dirs, files in os.walk(origin):
         walk_buffer.append((root, files, origin, target))
     print('File list loaded.')
 
     print('Copying files...')
     pool = Pool(cpu_cores)
-    results = pool.starmap(copy_files, walk_buffer)
+    results = pool.starmap(copy_files, tqdm(walk_buffer, total=len(walk_buffer)), chunksize=10)
     pool.close()
     pool.join()
     print("Done.")
@@ -34,14 +35,14 @@ def sync(origin, target, job, cpu_cores):
 def delete_extras(origin, target, job, cpu_cores):
     walk_buffer = []
 
-    print(f'Loading file deletion list for {origin} -> {target}')
+    print(f'\nLoading file deletion list for {origin} -> {target}')
     for root, dirs, files in os.walk(target):
         walk_buffer.append((root, files, origin, target))
     print('File list loaded.')
 
     print('Deleting files...')
     pool = Pool(cpu_cores)
-    results = pool.starmap(delete_files, walk_buffer)
+    results = pool.starmap(delete_files, tqdm(walk_buffer, total=len(walk_buffer)), chunksize=10)
     pool.close()
     pool.join()
     print("Done.")
